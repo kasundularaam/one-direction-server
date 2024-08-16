@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-time Image Prediction</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      #predictedImage {
+        max-width: 100%;
+        height: auto;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ONE DIRECTION | 1D ❤️</h1>
+      <div>
+        <h2>Prediction: <span id="prediction">Waiting for image...</span></h2>
+        <img id="predictedImage" src="" alt="Predicted Image" />
+      </div>
+    </div>
+
+    <script>
+      const socket = io();
+
+      socket.on("prediction_result", function (data) {
+        document.getElementById("prediction").textContent = data.direction;
+        document.getElementById("predictedImage").src =
+          "data:image/jpeg;base64," + data.image;
+      });
+    </script>
+  </body>
+</html>

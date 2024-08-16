@@ -2,3 +2,5 @@ tensorflow
 numpy
 Pillow
 Flask
+Flask-SocketIO
+eventlet
