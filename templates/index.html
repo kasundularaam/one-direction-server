@@ -27,11 +27,16 @@
         height: auto;
         margin-top: 20px;
       }
+      #connectionStatus {
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>ONE DIRECTION | 1D ❤️</h1>
+      <div id="connectionStatus">Connection status: Disconnected</div>
       <div>
         <h2>Prediction: <span id="prediction">Waiting for image...</span></h2>
         <img id="predictedImage" src="" alt="Predicted Image" />
@@ -39,9 +44,23 @@
     </div>
 
     <script>
-      const socket = io();
+      const socket = io("/web"); // Connect to the '/web' namespace
 
-      socket.on("prediction_result", function (data) {
+      socket.on("connect", function () {
+        document.getElementById("connectionStatus").textContent =
+          "Connection status: Connected";
+      });
+
+      socket.on("disconnect", function () {
+        document.getElementById("connectionStatus").textContent =
+          "Connection status: Disconnected";
+      });
+
+      socket.on("connection_response", function (data) {
+        console.log("Server response:", data.data);
+      });
+
+      socket.on("data", function (data) {
         document.getElementById("prediction").textContent = data.direction;
         document.getElementById("predictedImage").src =
           "data:image/jpeg;base64," + data.image;
