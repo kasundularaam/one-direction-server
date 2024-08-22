@@ -68,5 +68,23 @@ def handle_esp32_disconnect():
     print('ESP32 client disconnected')
 
 
+@socketio.on('connect', namespace='/controller')
+def handle_controller_connect():
+    print('Controller client connected')
+    socketio.emit('connection_response', {
+                  'message': 'Controller Connected'}, namespace='/controller')
+
+
+@socketio.on('direction', namespace='/controller')
+def handle_controller_direction(data):
+    socketio.emit('data', {'direction': data}, namespace='/esp32')
+    print(data)
+
+
+@socketio.on('disconnect', namespace='/controller')
+def handle_controller_disconnect():
+    print('Controller client disconnected')
+
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
