@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Ensure the dataset/left directory exists
 UPLOAD_FOLDER = 'dataset/no_arrow'
-DATASET_SIZE = 2000
+DATASET_SIZE = 5000
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 image_count = 0
