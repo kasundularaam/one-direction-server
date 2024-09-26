@@ -14,6 +14,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+current_direction = "stop"
+
 
 @app.route('/')
 def index():
@@ -22,6 +24,8 @@ def index():
 
 @app.route('/upload_image', methods=['POST'])
 def upload_image():
+    global current_direction
+
     img_data = request.data
 
     filename = "image_to_process.jpg"
@@ -31,15 +35,19 @@ def upload_image():
         f.write(img_data)
 
     direction = predict_arrow(filepath)
-    print(f"DIRECTION: {direction}")
 
     with open(filepath, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
-    socketio.emit('data', {
-                  'direction': direction, 'image': encoded_string}, namespace='/web')
+    if (direction == "no_arrow"):
+        direction = "forward"
 
-    socketio.emit('data', {'direction': direction}, namespace='/esp32')
+    socketio.emit('data', {
+        'direction': direction, 'image': encoded_string}, namespace='/web')
+    # if (current_direction != direction):
+    #     socketio.emit('data', {'direction': direction}, namespace='/esp32')
+
+    current_direction = direction
 
     return 'OK', 200
 

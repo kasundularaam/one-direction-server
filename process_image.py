@@ -2,10 +2,9 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 import tensorflow as tf
 
-
 class_names = ['forward', 'left', 'no_arrow', 'right']
 
-
+# Load the model globally
 model = tf.keras.models.load_model('one_direction_model.h5')
 
 
